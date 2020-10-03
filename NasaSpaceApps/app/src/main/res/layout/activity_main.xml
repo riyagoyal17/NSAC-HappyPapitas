@@ -1,0 +1,43 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:background="#4caf50">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Latitude:"
+        android:fontFamily="sans-serif-black"
+        android:layout_marginVertical="10dp"
+        android:textSize="20dp"/>
+
+    <TextView
+        android:id="@+id/latTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#f5f5f5"
+        android:text="Latitude will be here! "
+        android:layout_marginVertical="10dp"
+        android:textSize="15dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Longitude:"
+        android:fontFamily="sans-serif-black"
+        android:layout_marginVertical="10dp"
+        android:textSize="20dp"/>
+
+    <TextView
+        android:id="@+id/lonTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#f5f5f5"
+        android:text="Longitude will be here! "
+        android:layout_marginVertical="10dp"
+        android:textSize="15dp"/>
+
+</LinearLayout>
