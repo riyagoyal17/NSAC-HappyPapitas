@@ -1,4 +1,4 @@
-# NSAC-HappyPapitas
+# NSAC-HealthyPapitas
 
 # Introduction
 
