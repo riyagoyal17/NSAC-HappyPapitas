@@ -36,6 +36,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
+import java.net.HttpURLConnection;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.io.IOException;
+import android.os.Bundle;
+import android.util.Log;
+
 
 public class MainActivity
         extends AppCompatActivity {
@@ -50,6 +60,41 @@ public class MainActivity
     // from layout file
     TextView latitudeTextView, longitTextView;
     int PERMISSION_ID = 44;
+
+    class Weather extends AsyncTask<String,Void,String>{
+        @Override
+        protected String doInBackground(String... address) {
+            //String... means multiple address can be send. It acts as array
+            try {
+                URL url = new URL(address[0]);
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+                //Establish connection with address
+                connection.connect();
+
+                //retrieve data from url
+                InputStream is = connection.getInputStream();
+                InputStreamReader isr = new InputStreamReader(is);
+
+                //Retrieve data and return it as String
+                int data = isr.read();
+                String content = "";
+                char ch;
+                while (data != -1){
+                    ch = (char) data;
+                    content = content + ch;
+                    data = isr.read();
+                }
+                return content;
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+    }
 
     @Override
     protected void onCreate(
@@ -67,6 +112,24 @@ public class MainActivity
 
         // method to get the location
         getLastLocation();
+
+        String lat = latitudeTextView.getText().toString();
+        String lon = longitTextView.getText().toString();
+
+        //Double lati = Double.parseDouble(lat);
+        //Double longi = Double.parseDouble(lon);
+
+        String content;
+        Weather weather = new Weather();
+        try {
+            content = weather.execute("api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+lon+"&appid=764da74326715f9aeb1b40def87b509a").get();
+            //First we will check data is retrieve successfully or not
+            Log.i("contentData",content);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     @SuppressLint("MissingPermission")
@@ -96,6 +159,9 @@ public class MainActivity
                                             requestNewLocationData();
                                         }
                                         else {
+                                            Double lati = location.getLatitude();
+                                            Double longi = location.getLongitude();
+
                                             latitudeTextView
                                                     .setText(
                                                             location
@@ -106,8 +172,11 @@ public class MainActivity
                                                             location
                                                                     .getLongitude()
                                                                     + "");
+
                                         }
                                     }
+
+
                                 });
             }
 
