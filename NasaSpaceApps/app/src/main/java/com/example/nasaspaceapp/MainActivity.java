@@ -44,12 +44,16 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.io.IOException;
 import android.os.Bundle;
+import org.json.JSONObject;
+import org.json.JSONArray;
+import android.view.View;
+import android.widget.Button;
 import android.util.Log;
 
 
 public class MainActivity
         extends AppCompatActivity {
-
+    Button b1;
     // initializing
     // FusedLocationProviderClient
     // object
@@ -59,7 +63,12 @@ public class MainActivity
     // Initializing other items
     // from layout file
     TextView latitudeTextView, longitTextView;
+    String temperature = "";
+    String humidity = "";
+    String windSpeed = "";
+    String content;
     int PERMISSION_ID = 44;
+
 
     class Weather extends AsyncTask<String,Void,String>{
         @Override
@@ -119,18 +128,46 @@ public class MainActivity
         //Double lati = Double.parseDouble(lat);
         //Double longi = Double.parseDouble(lon);
 
-        String content;
+
         Weather weather = new Weather();
         try {
             content = weather.execute("api.openweathermap.org/data/2.5/weather?lat="+lat+"&lon="+lon+"&appid=764da74326715f9aeb1b40def87b509a").get();
             //First we will check data is retrieve successfully or not
             Log.i("contentData",content);
 
+            JSONObject jsonObject = new JSONObject(content);
+            String windData = jsonObject.getString("wind");
+            String mainData = jsonObject.getString("main");
+
+
+
+            JSONArray array = new JSONArray(mainData);
+            for(int i=0; i<array.length(); i++){
+                JSONObject mainPart = array.getJSONObject(i);
+                 temperature = mainPart.getString("temp");
+                 humidity = mainPart.getString("humidity");
+            }
+
+
+            JSONObject windPart = new JSONObject(windData);
+            windSpeed = windPart.getString("speed");
+
+
+
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+        b1=(Button)findViewById(R.id.button);
+        b1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(MainActivity.this,"YOUR MESSAGE",Toast.LENGTH_LONG).show();
+            }
+        });
+
     }
+
 
     @SuppressLint("MissingPermission")
     private void getLastLocation()
@@ -350,3 +387,4 @@ public class MainActivity
         }
     }
 }
+
